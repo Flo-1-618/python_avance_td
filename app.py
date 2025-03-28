@@ -187,27 +187,19 @@ def plot_vente_mois(data, abbr=False):
 
 
 # Table des ventes
-# Création d'une table de données interactive avec Dash DataTable
 table_des_ventes = dash_table.DataTable(
-    id="table-ventes",  # Identifiant unique pour la table
-    editable=False,  # Désactive l'édition des cellules
-    filter_action="native",  # Ajoute une barre de filtre pour chaque colonne
-    sort_action="native",  # Permet le tri des colonnes
-    page_action="native",  # Active la pagination
-    page_current=0,  # Page par défaut affichée
-    page_size=10,  # Nombre de lignes affichées par page
-    # data=df[colonnes].to_dict("records"),  # Données à afficher dans la table
-    columns=[  # Définition des colonnes
-        {"id": c, "name": c.replace("_", " ").title()} for c in colonnes
-    ],
+    id="table-ventes",
+    editable=False,
+    filter_action="native",
+    sort_action="native",
+    page_action="native",
+    page_current=0,
+    page_size=10,
+    columns=[{"id": c, "name": c.replace("_", " ").title()} for c in colonnes],
     style_cell={
-        "padding": "0",
-        "font-size": "1vw",
+        "font-size": "1.2vw",
+        "font-family": "Arial",
         "fontWeight": "bold",
-        "minHeight": "3vh",
-        "height": "3vh",
-        "maxHeight": "3vh",
-        "lineHeight": "0.5vh",
     },
 )
 
@@ -226,7 +218,6 @@ app.layout = dbc.Container(
                     html.H3("ECAP Store"),
                     md=6,
                     style={
-                        "border": "solid",
                         "height": "7vh",
                         "display": "flex",
                         "alignItems": "center",
@@ -253,7 +244,6 @@ app.layout = dbc.Container(
                     ],
                     md=6,
                     style={
-                        "border": "solid",
                         "height": "7vh",
                         "display": "flex",
                         "alignItems": "center",
@@ -282,7 +272,6 @@ app.layout = dbc.Container(
                                         config={"responsive": True},
                                     ),
                                     style={
-                                        "border": "solid",
                                         "width": "50%",
                                         "height": "23vh",
                                         "display": "flex",
@@ -300,7 +289,6 @@ app.layout = dbc.Container(
                                         config={"responsive": True},
                                     ),
                                     style={
-                                        "border": "solid",
                                         "width": "50%",
                                         "height": "23vh",
                                         "display": "flex",
@@ -317,13 +305,12 @@ app.layout = dbc.Container(
                                     dcc.Graph(
                                         id="barplot-vente",
                                         style={
-                                            "width": "100%",
-                                            "height": "90%",
+                                            "width": "110%",
+                                            "height": "100%",
                                         },
                                         config={"responsive": True},
                                     ),
                                     style={
-                                        "border": "solid",
                                         "height": "70vh",
                                     },
                                 )
@@ -342,17 +329,15 @@ app.layout = dbc.Container(
                                     dcc.Graph(
                                         id="evolution-ca",
                                         style={
-                                            "width": "100%",
+                                            "width": "120%",
                                             "height": "90%",
                                         },
                                         config={"responsive": True},
                                     ),
                                     style={
-                                        "border": "solid",
-                                        "height": "43vh",
+                                        "height": "47vh",
                                         "display": "flex",
                                         "alignItems": "center",
-                                        "justifyContent": "center",
                                     },
                                 )
                             ]
@@ -364,13 +349,12 @@ app.layout = dbc.Container(
                                     [
                                         html.H5(
                                             "Table des 100 dernières ventes",
-                                            style={"paddingLeft": "3vh"},
+                                            style={"paddingLeft": "3vw"},
                                         ),
                                         table_des_ventes,
                                     ],
                                     style={
-                                        "border": "solid",
-                                        "height": "50vh",
+                                        "height": "46vh",
                                     },
                                 )
                             ]
@@ -411,7 +395,12 @@ def update_graphs(locations):
     vente_mois = plot_vente_mois(df_filtre)
     barplot_vente = barplot_top_10_ventes(df_filtre)
     evolution_ca = plot_evolution_chiffre_affaire(df_filtre)
-    table_ventes = df_filtre[colonnes].head(100).to_dict("records")
+    table_ventes = (
+        df_filtre[colonnes]
+        .sort_values(by="Date", ascending=False)
+        .head(100)
+        .to_dict("records")
+    )
 
     return (chiffre_affaires, vente_mois, barplot_vente, evolution_ca, table_ventes)
 
